@@ -14,6 +14,6 @@ PROBLEMS:
 Function gender_corrector(str_to_post_edit, YOU, ME)
 
 The first parameter is a string you want to post-edit.
-The second parameter is gender for 2nd person in this sring.
-The third parameter is gender for 1st person in this sring.
+The second parameter is gender for the 2nd person in this string.
+The third parameter is gender for the 1st person in this string.
 Don't forget to 'import requests, json'
