@@ -75,10 +75,10 @@ def gender_corrector(str_to_post_edit, YOU, ME):
 
                 if tagged_sentences[index - 1]['token'] == 'jsem' or tagged_sentences[index - 1]['token'] == 'bych':
 
-                    if YOU == 'F' and male: 
+                    if ME == 'F' and male: 
                         sentences_list_to_change[index]['token'] = str(tagged_sentences[index]['token']) + 'a'
 
-                    if YOU == 'M' and female:
+                    if ME == 'M' and female:
                         sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
       
 
@@ -92,10 +92,10 @@ def gender_corrector(str_to_post_edit, YOU, ME):
                         sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
 
                 if tagged_sentences[index + 1]['token'] == 'jsem' or tagged_sentences[index + 1]['token'] == 'bych':
-                    if YOU == 'F' and male: 
+                    if ME == 'F' and male: 
                         sentences_list_to_change[index]['token'] = str(tagged_sentences[index]['token']) + 'a'
                     
-                    if YOU == 'M' and female:
+                    if ME == 'M' and female:
                         sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
                         
      
