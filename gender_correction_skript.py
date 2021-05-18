@@ -26,82 +26,68 @@ def gender_corrector(str_to_post_edit, YOU, ME):
     # the third parameter is gender for 1st person in this sring.
     # don't forget to 'import requests, json'
 
-    searched_form = 'ERROR'
-    current_sentence = str_to_post_edit
-    all = [str(str_to_post_edit)]
-
-
-    my_response = requests.get("http://lindat.mff.cuni.cz/services/morphodita/api/tag?data=" + all[0] + "&convert_tagset=pdt_to_conll2009&output=json")
+    my_response = requests.get("http://lindat.mff.cuni.cz/services/morphodita/api/tag?data=" + str(str_to_post_edit) + "&convert_tagset=pdt_to_conll2009&output=json")
     my_response.encoding = 'utf8'
 
     tagged = json.loads(my_response.text)
-
-    tagged_sentence = []
-
-    for i in tagged['result']:
-        tagged_sentence.append(i)
-
-    # тут 2 + листа с тегами в листе
-
-    tagged_sentences = []
-
     #merging multiple tagged sentences into one list without list-in-a-list structure
 
-    for lists in tagged_sentence:
-        for element in lists:
-            tagged_sentences.append(element)
+    original_tagged_sentences = []
 
-    sentences_list_to_change = tagged_sentences.copy()
+    for bracket in tagged['result']:
+        for element in bracket:
+            original_tagged_sentences.append(element)
+    
+    sentences_to_change = original_tagged_sentences.copy()
 
-    # print(sentences_list_to_change)
+    for index in range(len(original_tagged_sentences)):
 
-    for index in range(len(tagged_sentences)):
-        verb = 'POS=V' in tagged_sentences[index]['tag']
-        past_tense = 'Ten=R' in tagged_sentences[index]['tag']
-        # num = 'Num=S' in tagged_sentences[index]['tag']
+        verb = 'POS=V' in original_tagged_sentences[index]['tag']
+        past_tense = 'Ten=R' in original_tagged_sentences[index]['tag']
+        # num = 'Num=S' in original_tagged_sentences[index]['tag']
 
         if verb and past_tense:
-            female = 'Gen=Q' in tagged_sentences[index]['tag'] or 'Gen=F' in tagged_sentences[index]['tag']
-            male = 'Gen=Y' in tagged_sentences[index]['tag'] or 'Gen=Y' in tagged_sentences[index]['tag'] or 'Gen=I' in tagged_sentences[index]['tag']
+            female = 'Gen=Q' in original_tagged_sentences[index]['tag'] or 'Gen=F' in original_tagged_sentences[index]['tag']
+            male = 'Gen=Y' in original_tagged_sentences[index]['tag'] or 'Gen=Y' in original_tagged_sentences[index]['tag'] or 'Gen=I' in original_tagged_sentences[index]['tag']
 
             if index > 0:
-                if tagged_sentences[index - 1]['token'] == 'jsi' or tagged_sentences[index - 1]['token'] == 'bys' or tagged_sentences[index - 1]['token'] == 'ses' or tagged_sentences[index + 1]['token'] == 'sis' or tagged_sentences[index - 1]['token'] == 'jste' or tagged_sentences[index - 1]['token'] == 'byste':
+                if original_tagged_sentences[index - 1]['token'] == 'jsi' or original_tagged_sentences[index - 1]['token'] == 'bys' or original_tagged_sentences[index - 1]['token'] == 'ses' or original_tagged_sentences[index + 1]['token'] == 'sis' or original_tagged_sentences[index - 1]['token'] == 'jste' or original_tagged_sentences[index - 1]['token'] == 'byste':
                    
                     if YOU == 'F' and male: 
-                        sentences_list_to_change[index]['token'] = str(tagged_sentences[index]['token']) + 'a'
+                        sentences_to_change[index]['token'] = str(original_tagged_sentences[index]['token']) + 'a'
                         
                     if YOU == 'M' and female:
-                        sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
+                        sentences_to_change[index]['token'] = original_tagged_sentences[index]['token'][:-1] 
 
-                if tagged_sentences[index - 1]['token'] == 'jsem' or tagged_sentences[index - 1]['token'] == 'bych':
+                if original_tagged_sentences[index - 1]['token'] == 'jsem' or original_tagged_sentences[index - 1]['token'] == 'bych':
 
                     if ME == 'F' and male: 
-                        sentences_list_to_change[index]['token'] = str(tagged_sentences[index]['token']) + 'a'
+                        sentences_to_change[index]['token'] = str(original_tagged_sentences[index]['token']) + 'a'
 
                     if ME == 'M' and female:
-                        sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
+                        sentences_to_change[index]['token'] = original_tagged_sentences[index]['token'][:-1] 
       
 
 
-            if index < len(tagged_sentences):
-                if tagged_sentences[index + 1]['token'] == 'jsi' or tagged_sentences[index + 1]['token'] == 'bys' or tagged_sentences[index + 1]['token'] == 'ses' or tagged_sentences[index + 1]['token'] == 'sis' or tagged_sentences[index + 1]['token'] == 'jste' or tagged_sentences[index + 1]['token'] == 'byste':
+            if index < len(original_tagged_sentences):
+                if original_tagged_sentences[index + 1]['token'] == 'jsi' or original_tagged_sentences[index + 1]['token'] == 'bys' or original_tagged_sentences[index + 1]['token'] == 'ses' or original_tagged_sentences[index + 1]['token'] == 'sis' or original_tagged_sentences[index + 1]['token'] == 'jste' or original_tagged_sentences[index + 1]['token'] == 'byste':
                     if YOU == 'F' and male: 
-                        sentences_list_to_change[index]['token'] = str(tagged_sentences[index]['token']) + 'a'
+                        sentences_to_change[index]['token'] = str(original_tagged_sentences[index]['token']) + 'a'
                     
                     if YOU == 'M' and female:
-                        sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
+                        sentences_to_change[index]['token'] = original_tagged_sentences[index]['token'][:-1] 
 
-                if tagged_sentences[index + 1]['token'] == 'jsem' or tagged_sentences[index + 1]['token'] == 'bych':
+                if original_tagged_sentences[index + 1]['token'] == 'jsem' or original_tagged_sentences[index + 1]['token'] == 'bych':
                     if ME == 'F' and male: 
-                        sentences_list_to_change[index]['token'] = str(tagged_sentences[index]['token']) + 'a'
+                        sentences_to_change[index]['token'] = str(original_tagged_sentences[index]['token']) + 'a'
                     
                     if ME == 'M' and female:
-                        sentences_list_to_change[index]['token'] = tagged_sentences[index]['token'][:-1] 
+                        sentences_to_change[index]['token'] = original_tagged_sentences[index]['token'][:-1] 
                         
      
     final_string_list = []
 
-    for item in sentences_list_to_change:
+    for item in sentences_to_change:
         final_string_list.append(item['token'])
         if 'space' in item:
             final_string_list.append(item['space'])
