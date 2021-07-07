@@ -5,11 +5,13 @@ This script changes gender distinction between 2 characters in the scenarios.
 Copy-paste your scenario into dialog.txt
 The final output will be in result.txt as well as in the console
 
-Particular qualities:
-- to be add
-
 PROBLEMS:
-- to be add
+- Mít rád case is not done (TO BE ADD)
+
+Particular qualities:
+- works with adjectives; verbs with the 1st/2nd person
+
+
 
 Function gender_corrector(str_to_post_edit, YOU, ME)
 
