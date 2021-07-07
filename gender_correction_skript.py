@@ -60,6 +60,29 @@ def gender_corrector(str_to_post_edit, YOU, ME):
             further = True if cur + step < length else False
             #cur_less_than_zero =  True if step >= 0 else False
 
+             # ADJECTIVES
+
+            if original_tagged_sentences[cur]['token'].lower() in ('buď','buďte','jsi','jsem') and further and original_tagged_sentences[cur + step]['token'].lower() != 'rád' and original_tagged_sentences[cur + step]['token'].lower() != 'ráda':
+           
+                male_2 = 'Gen=M' in original_tagged_sentences[cur + step]['tag']
+                female_2 = 'Gen=F' in original_tagged_sentences[cur + step]['tag'] or 'Gen=Q' in original_tagged_sentences[cur + step]['tag']
+
+                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and YOU == 'F' and male_2 and word_is_not_changed:
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'á'
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and YOU == 'M' and female_2 and word_is_not_changed:
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'ý' 
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+                
+                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and ME == 'F' and male_2 and word_is_not_changed:
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'á'
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and ME == 'M' and female_2 and word_is_not_changed:
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'ý'
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+
+
+
             # JSEM-JSI RÁD CASE
             if original_tagged_sentences[cur]['token'].lower() == 'jsi' and further:
                 if original_tagged_sentences[cur + step]['token'].lower() == 'ráda' and YOU == 'M':
@@ -71,39 +94,40 @@ def gender_corrector(str_to_post_edit, YOU, ME):
                     word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
 
             if original_tagged_sentences[cur]['token'].lower() == 'jsem' and further:
+                if original_tagged_sentences[cur + step]['token'].lower() == 'ráda' and ME == 'M':
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1]
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+
+                if original_tagged_sentences[cur + step]['token'].lower() == 'rád' and ME == 'F':
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token']) + 'a'
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+            
+            
+            # MÍT RÁD CASE 
+
+            if original_tagged_sentences[cur]['token'].lower() == 'mám' and further:
+
+                if original_tagged_sentences[cur + step]['token'].lower() == 'ráda' and ME == 'M':
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1]
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+
+                if original_tagged_sentences[cur + step]['token'].lower() == 'rád' and ME == 'F':
+                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token']) + 'a'
+                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
+             
+            if original_tagged_sentences[cur]['token'].lower() == 'máš' and further:
                 if original_tagged_sentences[cur + step]['token'].lower() == 'ráda' and YOU == 'M':
                     sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1]
                     word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
 
                 if original_tagged_sentences[cur + step]['token'].lower() == 'rád' and YOU == 'F':
+
                     sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token']) + 'a'
                     word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
             
             
-            # MÍT RÁD CASE - .... missing/to be done
 
-            # ADJECTIVES
-
-            if original_tagged_sentences[cur]['token'].lower() in ('buď','buďte','jsi','jsem') and further:
            
-                male_2 = 'Gen=M' in original_tagged_sentences[cur + step]['tag']
-                female_2 = 'Gen=F' in original_tagged_sentences[cur + step]['tag'] or 'Gen=Q' in original_tagged_sentences[cur + step]['tag']
-
-                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and YOU == 'F' and male_2 and word_is_not_changed:
-                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'á'
-                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
-                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and YOU == 'M' and female_2 and word_is_not_changed:
-                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'ý'
-                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
-                
-                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and ME == 'F' and male_2 and word_is_not_changed and original_tagged_sentences[cur + step]['token'] != 'rád':
-                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'á'
-                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
-                if 'POS=A' in original_tagged_sentences[cur + step]['tag'] and ME == 'M' and female_2 and word_is_not_changed and original_tagged_sentences[cur + step]['token'] != 'ráda':
-                    sentences_to_change[cur + step]['token'] = str(original_tagged_sentences[cur + step]['token'])[:-1] + 'ý'
-                    word_is_not_changed = True if original_tagged_sentences[cur + step]['token'] == sentences_to_change[cur + step]['token'] else False
-
-
             word_is_not_changed = True
 
             # VERBS

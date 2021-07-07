@@ -6,11 +6,11 @@ Copy-paste your scenario into dialog.txt
 The final output will be in result.txt as well as in the console
 
 PROBLEMS:
-- Mít rád case is not done (TO BE ADD)
+-
 
 Particular qualities:
 - works with adjectives; verbs with the 1st/2nd person
-
+- Mít rád case is done
 
 
 Function gender_corrector(str_to_post_edit, YOU, ME)
